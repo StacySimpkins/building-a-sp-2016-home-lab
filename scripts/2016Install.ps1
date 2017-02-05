@@ -116,16 +116,16 @@ $SecureStoreServiceApp = New-SPSecureStoreServiceApplication –ApplicationPool $A
 
 New-SPSecureStoreServiceApplicationProxy –Name “Secure Store Service Application Proxy” –ServiceApplication $SecureStoreServiceApp -DefaultProxyGroup
 
-## Performance Point (If Upgrading Use Existing Database Name) ##
+## Performance Point (If Upgrading Use Existing Database Name) UNCOMMENT IF USING THIS FOR 2013 SHAREPOINT ##
 
-$PerformancePointAppProxyName = “Performance Point Service Application Proxy”
-$PerformancePointAppName = “Performance Point Service Application”
-$PerformancePointDatabase = “PRD_PerformancePointDataDB”
+## $PerformancePointAppProxyName = “Performance Point Service Application Proxy”
+## $PerformancePointAppName = “Performance Point Service Application”
+## $PerformancePointDatabase = “PRD_PerformancePointDataDB”
 
 
-New-SPPerformancePointServiceApplication -Name $PerformancePointAppName -ApplicationPool $AppPoolName -DatabaseName $PerformancePointDatabase
+## New-SPPerformancePointServiceApplication -Name $PerformancePointAppName -ApplicationPool $AppPoolName -DatabaseName $PerformancePointDatabase
 
-New-SPPerformancePointServiceApplicationProxy -Name $PerformancePointAppProxyName -ServiceApplication $PerformancePointAppName -Default
+## New-SPPerformancePointServiceApplicationProxy -Name $PerformancePointAppProxyName -ServiceApplication $PerformancePointAppName -Default
 
 
 ## Create Subscription Settings and App Management Services ##  See minute 40 point int video dated 8/4/2014####
