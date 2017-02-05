@@ -5,15 +5,15 @@ This should be run on the first server in your farm #>
 
 #Creates the Default Service Application Pool#
 
-New-SPServiceApplicationPool -Name “Default SharePoint Service App Pool” -Account “Tailspintoys\svc_svcacct”
+New-SPServiceApplicationPool -Name â€œDefault SharePoint Service App Poolâ€ -Account â€œTailspintoys\svc_svcacctâ€
 
 ## Replace values between < > with correct values and remove < >#
 
-$DatabaseServerName = “SPAlias“
+$DatabaseServerName = â€œSPAliasâ€œ
 
-$AppPoolName = “Default SharePoint Service App Pool”
+$AppPoolName = â€œDefault SharePoint Service App Poolâ€
 
-$AppPoolUserName = “Tailspintoys\svc_svcacct“
+$AppPoolUserName = â€œTailspintoys\svc_svcacctâ€œ
 
 $SAAppPool = Get-SPServiceApplicationPool -Identity $AppPoolName -EA 0
 
@@ -39,7 +39,7 @@ if($AppPoolAccount -eq $null)
 
 {
 
-Write-Host “Cannot create or find the managed account $appPoolUserName, please ensure the account exists.”
+Write-Host â€œCannot create or find the managed account $appPoolUserName, please ensure the account exists.â€
 
 Exit -1
 
@@ -54,11 +54,11 @@ New-SPServiceApplicationPool -Name $SAAppPoolName -Account $AppPoolAccount -EA 0
 ## Create Usage and Health Data Collection Service and State Service Applications, replace variables with desired values for database names, etc. ##
 
 ## Begin Variables for usage and health data collection and state service, make sure the E: location exists first ##
-$usageSAName = “Usage and Health Data Collection Service”
-$usageServiceDBName = “PRD_Usage_HealthDataDB”
-$usageLogLocationOnDisk = “E:\logs\ULS\”
-$stateSAName = “State Service”
-$stateServiceDatabaseName = “PRD_StateServiceDataDB”
+$usageSAName = â€œUsage and Health Data Collection Serviceâ€
+$usageServiceDBName = â€œPRD_Usage_HealthDataDBâ€
+$usageLogLocationOnDisk = â€œE:\logs\ULS\â€
+$stateSAName = â€œState Serviceâ€
+$stateServiceDatabaseName = â€œPRD_StateServiceDataDBâ€
 ## End Variables ##
 
 Set-SPUsageService -LoggingEnabled 1 -UsageLogLocation $usageLogLocationOnDisk -UsageLogMaxSpaceGB 2
@@ -71,18 +71,18 @@ $stateServiceDatabase = New-SPStateServiceDatabase -Name $stateServiceDatabaseNa
 
 $stateSA = New-SPStateServiceApplication -Name $stateSAName -Database $stateServiceDatabase
 
-New-SPStateServiceApplicationProxy -ServiceApplication $stateSA -Name “$stateSAName Proxy” -DefaultProxyGroup
+New-SPStateServiceApplicationProxy -ServiceApplication $stateSA -Name â€œ$stateSAName Proxyâ€ -DefaultProxyGroup
 
 ## Create Managed Metadata Service (If Upgrading Use Existing Database Name of database that was attached) ##
 
-$metadataSAName = “Managed Metadata Service”
-$metadataDBName = “PRD_ManagedMetadataDB”
+$metadataSAName = â€œManaged Metadata Serviceâ€
+$metadataDBName = â€œPRD_ManagedMetadataDBâ€
 
-$mmsApp = New-SPMetadataServiceApplication -Name $metadataSAName –ApplicationPool $AppPoolName -DatabaseServer $DatabaseServerName -DatabaseName $metadataDBName > $null
+$mmsApp = New-SPMetadataServiceApplication -Name $metadataSAName â€“ApplicationPool $AppPoolName -DatabaseServer $DatabaseServerName -DatabaseName $metadataDBName > $null
 
-New-SPMetadataServiceApplicationProxy -Name “$metadataSAName Proxy” -DefaultProxyGroup -ServiceApplication $metadataSAName > $null
+New-SPMetadataServiceApplicationProxy -Name â€œ$metadataSAName Proxyâ€ -DefaultProxyGroup -ServiceApplication $metadataSAName > $null
 
-Get-SPServiceInstance | where-object {$_.TypeName -eq “Managed Metadata Web Service”} | Start-SPServiceInstance > $null
+Get-SPServiceInstance | where-object {$_.TypeName -eq â€œManaged Metadata Web Serviceâ€} | Start-SPServiceInstance > $null
 
 
 
@@ -91,86 +91,74 @@ Get-SPServiceInstance | where-object {$_.TypeName -eq “Managed Metadata Web Serv
 
 ## Word ##
 
-$wordAutomationServiceName = “Word Automation Service Application”
-$wordAutomationDatabaseName = “PRD_WordAutomationDataDB“
+$wordAutomationServiceName = â€œWord Automation Service Applicationâ€
+$wordAutomationDatabaseName = â€œPRD_WordAutomationDataDBâ€œ
 
-Get-SPServiceApplicationPool –Identity $AppPoolName | New-SPWordConversionServiceApplication -Name $wordAutomationServiceName -DatabaseName $wordAutomationDatabaseName
+Get-SPServiceApplicationPool â€“Identity $AppPoolName | New-SPWordConversionServiceApplication -Name $wordAutomationServiceName -DatabaseName $wordAutomationDatabaseName
 
 ## BDC (If Upgrading Use Existing Database Name) ##
 
-$BDCServiceName = “Business Data Connection Service Application”
-$BDCDatabaseName = “PRD_BusinessDataConnectionDataDB“
+$BDCServiceName = â€œBusiness Data Connection Service Applicationâ€
+$BDCDatabaseName = â€œPRD_BusinessDataConnectionDataDBâ€œ
 
-New-SPBusinessDataCatalogServiceApplication –ApplicationPool “Default SharePoint Service App Pool” –DatabaseName $BDCDatabaseName –DatabaseServer $DatabaseServerName –Name $BDCServiceName
+New-SPBusinessDataCatalogServiceApplication â€“ApplicationPool â€œDefault SharePoint Service App Poolâ€ â€“DatabaseName $BDCDatabaseName â€“DatabaseServer $DatabaseServerName â€“Name $BDCServiceName
 
-###  New-SPBusinessDataCatalogServiceApplicationProxy -Name “Business Data Connection Service Application Proxy” -ServiceApplication “Business Data Connection Service Application”##
+###  New-SPBusinessDataCatalogServiceApplicationProxy -Name â€œBusiness Data Connection Service Application Proxyâ€ -ServiceApplication â€œBusiness Data Connection Service Applicationâ€##
 
 ## Secure Store (If Upgrading Use Existing Database Name) ##
 
 #See page 162 - - previously did not have variable instantiation of the service app, and was trying to call the app by name on the proxy line versus the variable###
 
-$SecureStoreServiceAppName = “Secure Store Service Application”
-$SecureStoreDBName = “PRD_SecureStoreServiceDB”
+$SecureStoreServiceAppName = â€œSecure Store Service Applicationâ€
+$SecureStoreDBName = â€œPRD_SecureStoreServiceDBâ€
 
-$SecureStoreServiceApp = New-SPSecureStoreServiceApplication –ApplicationPool $AppPoolName –AuditingEnabled:$false –DatabaseServer $DatabaseServerName –DatabaseName $SecureStoreDBName –Name $SecureStoreServiceAppName
+$SecureStoreServiceApp = New-SPSecureStoreServiceApplication â€“ApplicationPool $AppPoolName â€“AuditingEnabled:$false â€“DatabaseServer $DatabaseServerName â€“DatabaseName $SecureStoreDBName â€“Name $SecureStoreServiceAppName
 
-New-SPSecureStoreServiceApplicationProxy –Name “Secure Store Service Application Proxy” –ServiceApplication $SecureStoreServiceApp -DefaultProxyGroup
-
-## Performance Point (If Upgrading Use Existing Database Name) ##
-
-$PerformancePointAppProxyName = “Performance Point Service Application Proxy”
-$PerformancePointAppName = “Performance Point Service Application”
-$PerformancePointDatabase = “PRD_PerformancePointDataDB”
-
-
-New-SPPerformancePointServiceApplication -Name $PerformancePointAppName -ApplicationPool $AppPoolName -DatabaseName $PerformancePointDatabase
-
-New-SPPerformancePointServiceApplicationProxy -Name $PerformancePointAppProxyName -ServiceApplication $PerformancePointAppName -Default
-
+New-SPSecureStoreServiceApplicationProxy â€“Name â€œSecure Store Service Application Proxyâ€ â€“ServiceApplication $SecureStoreServiceApp -DefaultProxyGroup
 
 ## Create Subscription Settings and App Management Services ##  See minute 40 point int video dated 8/4/2014####
 
-$SubSettingssName = “Subscription Settings Service”
+$SubSettingssName = â€œSubscription Settings Serviceâ€
 
-$SubSettingsDatabaseName = “PRD_SubscriptionSettingsDB”
+$SubSettingsDatabaseName = â€œPRD_SubscriptionSettingsDBâ€
 
-$AppManagementName = “App Management Service”
+$AppManagementName = â€œApp Management Serviceâ€
 
-$AppManagementDatabaseName = “PRD_AppManagementDB”
+$AppManagementDatabaseName = â€œPRD_AppManagementDBâ€
 
-$AppPoolName = “Default SharePoint Service App Pool”
+$AppPoolName = â€œDefault SharePoint Service App Poolâ€
 
-$DatabaseServerName = “SPAlias“
+$DatabaseServerName = â€œSPAliasâ€œ
 
-Write-Host “Creating Subscription Settings Service and Proxy…”
+Write-Host â€œCreating Subscription Settings Service and Proxyâ€¦â€
 
-$SubSvc = New-SPSubscriptionSettingsServiceApplication –ApplicationPool $AppPoolName –Name $SubSettingssName –DatabaseName $SubSettingsDatabaseName
+$SubSvc = New-SPSubscriptionSettingsServiceApplication â€“ApplicationPool $AppPoolName â€“Name $SubSettingssName â€“DatabaseName $SubSettingsDatabaseName
 
-$SubSvcProxy = New-SPSubscriptionSettingsServiceApplicationProxy –ServiceApplication $SubSvc
+$SubSvcProxy = New-SPSubscriptionSettingsServiceApplicationProxy â€“ServiceApplication $SubSvc
 
 Get-SPServiceInstance | where-object {$_.TypeName -eq $SubSettingssName} | Start-SPServiceInstance > $null
 
-Write-Host “Creating App Management Service and Proxy…”
+Write-Host â€œCreating App Management Service and Proxyâ€¦â€
 
-$AppManagement = New-SPAppManagementServiceApplication -Name $AppManagementName -DatabaseServer $DatabaseServerName -DatabaseName $AppManagementDatabaseName –ApplicationPool $AppPoolName
+$AppManagement = New-SPAppManagementServiceApplication -Name $AppManagementName -DatabaseServer $DatabaseServerName -DatabaseName $AppManagementDatabaseName â€“ApplicationPool $AppPoolName
 
-$AppManagementProxy = New-SPAppManagementServiceApplicationProxy -ServiceApplication $AppManagement -Name “$AppManagementName Proxy”
+$AppManagementProxy = New-SPAppManagementServiceApplicationProxy -ServiceApplication $AppManagement -Name â€œ$AppManagementName Proxyâ€
 
 Get-SPServiceInstance | where-object {$_.TypeName -eq $AppManagementName} | Start-SPServiceInstance > $null
 
 Set-SPAppDomain apps.Tailspintoys.com
 
-Set-SPAppSiteSubscriptionName -Name “apps” -Confirm:$false
+Set-SPAppSiteSubscriptionName -Name â€œappsâ€ -Confirm:$false
 
 ## Create Machine Translation Service ##
 
-$AppPool = “Default SharePoint Service App Pool”
+$AppPool = â€œDefault SharePoint Service App Poolâ€
 
-$MTSInst = “Machine Translation Service”
+$MTSInst = â€œMachine Translation Serviceâ€
 
-$MTSName = “Translation Service”
+$MTSName = â€œTranslation Serviceâ€
 
-$MTSDB = “PRD_MachineTranslationDB”
+$MTSDB = â€œPRD_MachineTranslationDBâ€
 
 $AppPoolName = Get-SPServiceApplicationPool $AppPool
 
@@ -178,7 +166,7 @@ Get-SPServiceInstance | ? {$_.GetType().Name -eq $MTSInst} | Start-SPServiceInst
 
 $MTS = New-SPTranslationServiceApplication -Name $MTSName -ApplicationPool $AppPoolName -DatabaseName $MTSDB
 
-$MTSProxy = New-SPTranslationServiceApplicationProxy –Name “$MTSName Proxy” –ServiceApplication $MTS –DefaultProxyGroup
+$MTSProxy = New-SPTranslationServiceApplicationProxy â€“Name â€œ$MTSName Proxyâ€ â€“ServiceApplication $MTS â€“DefaultProxyGroup
 
 
 Write-Host "Time to configure User Profile Service, Visio, Excel,Performance Point. . ." -ForegroundColor White
